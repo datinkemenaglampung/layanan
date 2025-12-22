@@ -8,7 +8,7 @@
 
     <div class="card-body">
 
-        <form action="{{ route('permohonan.update', $permohonan->id) }}" method="POST" enctype="multipart/form-data">
+        <form id="formEdit" action="{{ route('permohonan.update', $permohonan->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -26,6 +26,12 @@
 
                         <div class="card-body">
 
+                            @if($persyaratan->pivot->uploaded_level == 1)
+                            <div class="alert alert-info py-1 px-2 mb-2">
+                                <small><i class="fa fa-info-circle"></i> Berkas ini diunggah oleh Admin Kabupaten</small>
+                            </div>
+                            @endif
+
                             @if($pivot && $pivot->value)
                             <p>
                                 File saat ini:
@@ -33,13 +39,13 @@
                                     class="btn btn-primary btn-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#pdfModal"
-                                    data-url="{{ asset('storage/permohonan/'.$pivot->value) }}">
+                                    data-url="{{ asset('storage/permohonan/'.$permohonan->user->username.'/'.$pivot->value) }}">
                                     Lihat PDF
                                 </button>
                             </p>
                             @endif
 
-                            @if(!$pivot || $pivot->status != 'sesuai')
+                            @if(!$pivot || optional($pivot)->status != 'sesuai')
                             <input type="file"
                                 name="files[{{ $persyaratan->id }}]"
                                 class="form-control"
@@ -48,35 +54,32 @@
                             @else
                             <p class="text-success mb-0">Tidak perlu upload ulang</p>
                             @endif
-
                         </div>
 
                         <div class="card-footer">
                             <p class="mb-0">
                                 Status:
-                                @if($pivot->status == 'sesuai')
+
+                                @if(optional($pivot)->status == 'sesuai')
                                 <span class="badge bg-success">DITERIMA</span>
-                                @elseif($pivot->status == 'tidak sesuai')
+
+                                @elseif(optional($pivot)->status == 'tidak sesuai')
                                 <span class="badge bg-danger">DITOLAK</span><br>
-                                <small class="text-danger">Catatan: {{ $pivot->catatan }}</small>
+                                <small class="text-danger">Catatan: {{ optional($pivot)->catatan }}</small>
+
                                 @else
-                                <span class="badge bg-warning text-dark">MENUNGGU</span>
+                                <span class="badge bg-info">MENUNGGU</span>
                                 @endif
                             </p>
                         </div>
+
                     </div>
                 </div>
 
                 @endforeach
             </div>
-
-            <div class="mt-3">
-                <label class="fw-bold">Keterangan Tambahan</label>
-                <textarea name="keterangan" class="form-control" rows="3">{{ $permohonan->keterangan }}</textarea>
-            </div>
-
             <div class="text-end mt-4">
-                <button class="btn btn-primary px-4">Update</button>
+                <button class="btn btn-primary px-4" type="submit">Update</button>
             </div>
 
         </form>
@@ -93,6 +96,57 @@
 
     document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function() {
         document.getElementById('pdfFrame').src = "";
+    });
+    $(document).ready(function() {
+        $("#formEdit").submit(function(e) {
+            e.preventDefault();
+            let form = $(this);
+            let btnSubmit = form.find("[type='submit']");
+            let btnSubmitHtml = btnSubmit.html();
+            let url = form.attr("action");
+            let data = new FormData(this);
+            $.ajax({
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: "POST",
+                url: url,
+                data: data,
+                beforeSend: function() {
+                    btnSubmit.addClass("disabled").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...').prop("disabled", "disabled");
+                },
+                success: function(response) {
+                    let errorCreate = $('#errorCreate');
+                    errorCreate.css('display', 'none');
+                    errorCreate.find('.alert-text').html('');
+                    btnSubmit.removeClass("disabled").html(btnSubmitHtml).removeAttr("disabled");
+                    if (response.status === "success") {
+                        iziToast.success({
+                            title: 'Success',
+                            message: response.message,
+                            position: 'topRight'
+                        });
+                        setTimeout(function() {
+                            if (response.redirect === "" || response.redirect === "reload") {
+                                location.reload();
+                            } else {
+                                location.href = response.redirect;
+                            }
+                        }, 1000);
+                    } else {
+                        iziToast.error({
+                            title: 'error',
+                            message: response.message,
+                            position: 'topRight'
+                        });
+                    }
+                },
+                error: function(response) {
+                    btnSubmit.removeClass("disabled").html(btnSubmitHtml).removeAttr("disabled");
+                    toastr.error(response.responseJSON.message, 'Failed !');
+                }
+            });
+        });
     });
 </script>
 @endsection

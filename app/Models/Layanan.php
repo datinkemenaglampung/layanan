@@ -25,7 +25,7 @@ class Layanan extends Model
     public function persyaratans()
     {
         return $this->belongsToMany(Persyaratan::class, 'layanan_persyaratan')
-            ->withPivot('id', 'urut', 'wajib')
+            ->withPivot('id', 'urut', 'wajib', 'uploaded_level')
             ->withTimestamps()
             ->orderBy('layanan_persyaratan.urut', 'asc');
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Layanan;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -112,11 +113,12 @@ class UserController extends Controller
             ['url' => '#', 'title' => "Edit User"],
         ];
         $data = User::with(['roles', 'satker'])->where('id', $id)->first();
+        $layanans = Layanan::all();
         $config['form'] = (object)[
             'method' => 'PUT',
             'action' => route('users.update', $id)
         ];
-        return view('backend.users.form', compact('config', 'data'));
+        return view('backend.users.form', compact('config', 'data', 'layanans'));
     }
 
     public function update(Request $request, $id)
@@ -124,7 +126,6 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'role_id' => 'required|integer',
             'name' => 'required',
-            'kode_satker' => 'required',
             'username' => 'required|alpha_dash|unique:users,username,' . $request['username'] . ',username',
             'password' => 'between:6,255|confirmed|nullable',
             'email' => 'required|email|unique:users,email,' . $request['email'] . ',email',
@@ -152,6 +153,7 @@ class UserController extends Controller
                     'username' => $request['username'],
                     'active' => $request['active'],
                     'image' => $filename,
+                    'layanan_ids' => $request->layanan_ids ?? []
                 ]);
                 DB::commit();
                 $response = response()->json(['status' => 'success', 'message' => 'Berhasil Di Simpan', 'redirect' => route('users.index')]);

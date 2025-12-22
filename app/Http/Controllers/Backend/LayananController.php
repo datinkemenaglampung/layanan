@@ -125,6 +125,7 @@ class LayananController extends Controller
             'layanan_id' => 'required',
             'persyaratan_id' => 'required',
             'wajib' => 'required',
+            'uploaded_level' => 'required',
         ]);
         if ($validator->passes()) {
             DB::beginTransaction();
@@ -133,6 +134,7 @@ class LayananController extends Controller
                     'layanan_id' => $request['layanan_id'],
                     'persyaratan_id' => $request['persyaratan_id'],
                     'wajib' => $request['wajib'],
+                    'uploaded_level' => $request['uploaded_level'],
                     'urut' => LayananPersyaratan::where([
                         ['layanan_id', $request['layanan_id']]
                     ])->max('urut') + 1
@@ -200,6 +202,7 @@ class LayananController extends Controller
             <div class="dd3-content">' . $item->nama_persyaratan . '</div>
             <div class="dd3-actions">
                 <div class="btn-group">
+                    ' . ($item->pivot->uploaded_level == 1 ? '<div class="fw-bold">A - </div>' : '') . '
                     ' . ($item->pivot->wajib == 1 ? '<div class="text-danger fw-bold">*</div>' : '') . '
                     <button type="button" class="btn btn-sm btn-delete btn-default" 
                         data-id="' . $roots->id . '" 

@@ -63,12 +63,6 @@
                             @endforeach
                         </div>
 
-                        <!-- Keterangan tambahan -->
-                        <div class="form-group mt-3">
-                            <label class="fw-semibold">Keterangan Tambahan (opsional)</label>
-                            <textarea name="keterangan" class="form-control" placeholder="Tuliskan catatan tambahan..." rows="3"></textarea>
-                        </div>
-
                     </div>
 
                     <div class="card-footer d-flex justify-content-between">

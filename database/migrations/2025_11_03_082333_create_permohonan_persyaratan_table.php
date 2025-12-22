@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('persyaratan_id')->nullable()->constrained()->on('persyaratan')->onUpdate('cascade')->onDelete('cascade');
             $table->string('value')->nullable();
             $table->enum('status', ['0', '1'])->nullable();
+            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }

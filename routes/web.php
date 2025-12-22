@@ -63,7 +63,18 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
     /* Permohonan */
     Route::get('permohonan/layanan/{slug}', [Backend\PermohonanController::class, 'pengajuan'])->name('permohonan.pengajuan');
     Route::post('permohonan/verify/{pivot_id}', [Backend\PermohonanController::class, 'verify'])->name('permohonan.verify');
+    Route::post('permohonan/{id}/review-complete', [Backend\PermohonanController::class, 'reviewComplete'])->name('permohonan.reviewComplete');
+    Route::post('permohonan/ajukan/{id}', [Backend\PermohonanController::class, 'ajukan'])->name('permohonan.ajukan');
     Route::resource('permohonan', Backend\PermohonanController::class);
+
+    Route::get('/permohonan/{id}/timeline', function ($id) {
+        $logs = \App\Models\PermohonanLog::with(['user', 'permohonan'])
+            ->where('permohonan_id', $id)
+            ->orderBy('created_at')
+            ->get();
+
+        return response()->json($logs);
+    });
 
     /* Persyaratan */
     Route::get('persyaratan/select2', [Backend\PersyaratanController::class, 'select2'])->name('persyaratan.select2');

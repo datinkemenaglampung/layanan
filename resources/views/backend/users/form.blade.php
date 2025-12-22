@@ -103,6 +103,33 @@
                                     </select>
                                 </div>
                             </div>
+                            @if(auth()->user()->role_id == 1)
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-semibold">
+                                    Layanan yang Bisa Di-Approve :
+                                </label>
+                                <hr>
+                                <div class="row g-2">
+                                    @foreach ($layanans as $layanan)
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="form-check">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="layanan_ids[]"
+                                                id="layanan_{{ $layanan->id }}"
+                                                value="{{ $layanan->id }}"
+                                                @checked(in_array($layanan->id, $data->layanan_ids ?? []))
+                                            >
+                                            <label class="form-check-label" for="layanan_{{ $layanan->id }}">
+                                                {{ $layanan->nama_layanan }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

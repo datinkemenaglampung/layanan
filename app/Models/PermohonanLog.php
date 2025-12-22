@@ -13,4 +13,14 @@ class PermohonanLog extends Model
         'users_id',
         'catatan',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
+
+    public function permohonan()
+    {
+        return $this->belongsTo(Permohonan::class, 'permohonan_id');
+    }
 }

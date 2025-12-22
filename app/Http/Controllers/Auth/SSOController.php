@@ -59,6 +59,11 @@ class SSOController extends Controller
                     'email' => $email,
                     'role_id' => '2',
                     'password' => bcrypt($email),
+                    'KODE_SATKER_1' => $userData['KODE_SATKER_1'],
+                    'KODE_SATKER_2' => $userData['KODE_SATKER_2'],
+                    'KODE_SATKER_3' => $userData['KODE_SATKER_3'],
+                    'KODE_SATKER_4' => $userData['KODE_SATKER_4'],
+                    'KODE_SATKER_5' => $userData['KODE_SATKER_5'],
                 ]
             );
         }

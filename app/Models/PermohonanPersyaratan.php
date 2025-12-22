@@ -13,6 +13,7 @@ class PermohonanPersyaratan extends Model
         'persyaratan_id',
         'value',
         'status',
+        'catatan',
     ];
 
     public function permohonan()

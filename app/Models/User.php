@@ -27,7 +27,12 @@ class   User extends Authenticatable
         'locked_until',
         'failed_login_attempts',
         'role_id',
-        'kode_satker',
+        'layanan_ids',
+        'KODE_SATKER_1',
+        'KODE_SATKER_2',
+        'KODE_SATKER_3',
+        'KODE_SATKER_4',
+        'KODE_SATKER_5',
     ];
 
     /**
@@ -51,6 +56,7 @@ class   User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'locked_until' => 'datetime',
+            'layanan_ids' => 'array',
         ];
     }
 

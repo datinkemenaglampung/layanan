@@ -57,6 +57,13 @@
                             <option value="1"> Ya </option>
                             <option value="0"> Tidak </option>
                         </select>
+                        <hr>
+                        <label for="">Level Persyaratan</label>
+                        <select name="uploaded_level" id="uploaded_level" class="form-control">
+                            <option value="">.: Pilih :.</option>
+                            <option value="1"> Admin </option>
+                            <option value="0"> Semua </option>
+                        </select>
                     </div>
                     <div class="card-footer justify-content-between border-top">
                         <button type="submit" class="btn btn-primary float-end">Tambah <i class="fas fa-floppy-disk"></i>
