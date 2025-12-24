@@ -43,6 +43,12 @@ class PermohonanController extends Controller
                 $data = Permohonan::with(['layanan', 'user'])
                     ->where('users_id', $user->id)
                     ->get();
+            } elseif ($user->role_id == 3) {
+
+                // ADMIN Daerah: hanya layanan yang ditugaskan
+                $data = Permohonan::with(['layanan', 'user'])
+                    ->where('status_level', Auth()->user()->KODE_SATKER_3)
+                    ->get();
             } elseif ($user->role_id == 5) {
 
                 // ADMIN KANWIL: hanya layanan yang ditugaskan
@@ -50,6 +56,7 @@ class PermohonanController extends Controller
 
                 $data = Permohonan::with(['layanan', 'user'])
                     ->whereIn('layanan_id', $layananIds)
+                    ->where('status_level', '02090100000000')
                     ->get();
             } else {
 

@@ -5,6 +5,10 @@ use App\Http\Controllers\Auth as Auth;
 use App\Http\Controllers\Backend as Backend;
 use App\Http\Controllers\Frontend as Frontend;
 
+route::get('/', function () {
+    return redirect()->route('login');
+});
+
 Route::prefix('auth')->group(function () {
     // Route::get('/', [Auth\LoginController::class, 'showLoginForm']);
     // Route::post('/', [Auth\LoginController::class, 'login'])->name('login');
