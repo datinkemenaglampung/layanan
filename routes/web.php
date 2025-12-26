@@ -10,12 +10,12 @@ route::get('/', function () {
 });
 
 Route::prefix('auth')->group(function () {
-    // Route::get('/', [Auth\LoginController::class, 'showLoginForm']);
-    // Route::post('/', [Auth\LoginController::class, 'login'])->name('login');
+    Route::get('/', [Auth\LoginController::class, 'showLoginForm']);
+    Route::post('/', [Auth\LoginController::class, 'login'])->name('login');
     Route::get('/logout', [Auth\LoginController::class, 'logout'])->name('logout');
 
     /* SSO */
-    Route::get('/', [Auth\SSOController::class, 'redirectToProvider'])->name('login');
+    Route::get('/sso', [Auth\SSOController::class, 'redirectToProvider'])->name('loginSSO');
     Route::get('/callback', [Auth\SSOController::class, 'handleProviderCallback']);
 });
 
