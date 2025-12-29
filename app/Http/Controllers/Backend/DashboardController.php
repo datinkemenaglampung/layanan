@@ -48,4 +48,24 @@ class DashboardController extends Controller
 
         return response()->json($data);
     }
+
+    public function pass()
+    {
+        // Hindari timeout
+        set_time_limit(0);
+
+        User::select('id', 'email')
+            ->chunk(300, function ($users) {
+                foreach ($users as $user) {
+                    $user->update([
+                        'password' => bcrypt($user->email),
+                    ]);
+                }
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Reset password selesai'
+        ]);
+    }
 }

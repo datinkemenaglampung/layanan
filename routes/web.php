@@ -31,6 +31,7 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
 
     /* Dashboard */
     Route::get('dashboard', [Backend\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard/pass', [Backend\DashboardController::class, 'pass']);
     Route::post('dashboard/graph', [Backend\DashboardController::class, 'graph'])->name('dashboard.graph');
 
     /* User Route */

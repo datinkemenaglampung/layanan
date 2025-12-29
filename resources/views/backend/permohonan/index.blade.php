@@ -73,7 +73,7 @@
             $("#timelineContent").html('<div class="text-center text-muted">Memuat...</div>');
             modal.show();
 
-            $.get(`/backend/permohonan/${id}/timeline`, function(res) {
+            $.get(`/layanan/backend/permohonan/${id}/timeline`, function(res) {
 
                 if (res.length === 0) {
                     $("#timelineContent").html(`

@@ -45,7 +45,7 @@ class PermohonanController extends Controller
                     ->get();
             } elseif ($user->role_id == 3) {
 
-                // ADMIN Daerah: hanya layanan yang ditugaskan
+                // ADMIN Daerah: hanya layanan dari daerah 
                 $data = Permohonan::with(['layanan', 'user'])
                     ->where('status_level', Auth()->user()->KODE_SATKER_3)
                     ->get();
