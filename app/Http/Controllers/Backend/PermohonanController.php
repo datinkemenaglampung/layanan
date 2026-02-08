@@ -120,7 +120,43 @@ class PermohonanController extends Controller
                     }
 
                     return $actionBtn . ' ' . $tlBtn;
-                })->make();
+                })
+                ->addColumn('info_status_kab', function ($row) {
+                    if (auth()->user()->role_id == 2 && $row->survey_kab == 0 && $row->status_kab == 1) {
+                        $btn_survey = '<a href="' . route('survey.isi', [
+                            'layanan' => $row->layanan->id,
+                            'kode_satker' => $row->kode_satker
+                        ]) . '" class="btn btn-info btn-sm">Isi Survey</a></div>';
+                    } else {
+                        $btn_survey = '';
+                    }
+                    //
+                    if ($row->status_kab == 1) {
+                        $status_kab = '<div class="text-center"><i class="far fa-check-circle text-success fs-6"></i> Terkirim';
+                    } else {
+                        $status_kab = '<div class="text-center"><i class="far fa-times-circle text-danger fs-6"> Belum Terkirim</i>';
+                    }
+                    return $status_kab . '<br>' . $btn_survey;
+                })
+                ->addColumn('info_status_prov', function ($row) {
+                    if (auth()->user()->role_id == 2 && $row->survey_prov == 0 && $row->status_prov == 1) {
+                        $btn_survey = '<a href="' . route('survey.isi', [
+                            'layanan' => $row->layanan->id,
+                            'kode_satker' => '02090000000000'
+                        ]) . '" class="btn btn-info btn-sm">Isi Survey</a></div>';
+                    } else {
+                        $btn_survey = '';
+                    }
+                    //
+                    if ($row->status_prov == 1) {
+                        $status_prov = '<div class="text-center"><i class="far fa-check-circle text-success fs-6"></i> Terkirim';
+                    } else {
+                        $status_prov = '<div class="text-center"><i class="far fa-times-circle text-danger fs-6"> Belum Terkirim</i>';
+                    }
+                    return $status_prov . '<br>' . $btn_survey;
+                })
+                ->rawColumns(['action', 'info_status_kab', 'info_status_prov'])
+                ->make(true);
         }
         return view('backend.permohonan.index', compact('config'));
     }

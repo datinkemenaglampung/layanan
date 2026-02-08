@@ -75,7 +75,7 @@
             $("#timelineContent").html('<div class="text-center text-muted">Memuat...</div>');
             modal.show();
 
-            $.get(`/backend/permohonan/${id}/timeline`, function(res) {
+            $.get(`/layanan/backend/permohonan/${id}/timeline`, function(res) {
 
                 if (res.length === 0) {
                     $("#timelineContent").html(`
@@ -163,26 +163,12 @@
                     }
                 },
                 {
-                    data: 'survey_kab',
-                    name: 'survey_kab',
-                    render: function(data, type, full, meta) {
-                        if (full.status_kab == 1) {
-                            return `<div class="text-center"><i class="far fa-check-circle text-success fs-6"></i> Terkirim<br><a href="/backend/survey/isi/${full.layanan.id}/${full.kode_satker}" class="btn btn-info btn-sm">Isi Survey</a></div>`;
-                        } else {
-                            return '<div class="text-center"><i class="far fa-times-circle text-danger fs-6"> Belum Terkirim</i><>';
-                        }
-                    }
+                    data: 'info_status_kab',
+                    name: 'info_status_kab',
                 },
                 {
-                    data: 'survey_prov',
-                    name: 'survey_prov',
-                    render: function(data, type, full, meta) {
-                        if (full.status_prov == 1) {
-                            return `<div class="text-center"><i class="far fa-check-circle text-success fs-6"></i> Terkirim<br><a href="/backend/survey/isi/${full.layanan.id}/02090000000000" class="btn btn-info btn-sm">Isi Survey</a></div>`;
-                        } else {
-                            return '<div class="text-center"><i class="far fa-times-circle text-danger fs-6"> Belum Terkirim</i><>';
-                        }
-                    }
+                    data: 'info_status_prov',
+                    name: 'info_status_prov',
                 },
                 {
                     data: 'action',
