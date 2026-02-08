@@ -47,7 +47,8 @@ class PermohonanController extends Controller
 
                 // ADMIN Daerah: hanya layanan dari daerah 
                 $data = Permohonan::with(['layanan', 'user'])
-                    ->where('status_level', Auth()->user()->KODE_SATKER_3)
+                    ->where('kode_satker', Auth()->user()->KODE_SATKER_3)
+                    ->where('status_kab', '1')
                     ->get();
             } elseif ($user->role_id == 5) {
 
@@ -56,7 +57,7 @@ class PermohonanController extends Controller
 
                 $data = Permohonan::with(['layanan', 'user'])
                     ->whereIn('layanan_id', $layananIds)
-                    ->where('status_level', '02090100000000')
+                    ->where('status_prov', '1')
                     ->get();
             } else {
 
@@ -68,31 +69,54 @@ class PermohonanController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $tlBtn = '<a class="btn btn-secondary btnTimeline" href="javascript:void(0)" data-id="' . $row->id . '"><i class="fas fa-clock"></i></a>';
+                    //JIka Role User
                     if (auth()->user()->role_id == 2) {
-                        //
-                        if ($row->status == 'dibuat') {
+                        //cek Jika Status
+                        if ($row->status == 'dibuat' && $row->user_id == auth()->user()->user_id) {
                             $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>
-                                            <a class="btn btn-danger btn-delete" href="#" data-id ="' . $row->id . '"><i class="fas fa-trash"></i></a>';
+                                        <a class="btn btn-danger btn-delete" href="#" data-id ="' . $row->id . '"><i class="fas fa-trash"></i></a>
+                                        <a class="btn btn-primary btn-post" href="#" data-id ="' . $row->id . '"><i class="fas fa-paper-plane"></i> Ajukan</a>';
                         } else if ($row->status == 'selesai') {
                             $actionBtn = '<a class="btn btn-primary" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-eye"></i></a>';
                         } else {
                             $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>';
                         }
-                    } else {
+
+                        //cek role admin kab
+                    } else if (auth()->user()->role_id == 3) {
+                        if ($row->status == 'dibuat' && $row->user_id == auth()->user()->user_id) {
+                            $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>
+                                        <a class="btn btn-danger btn-delete" href="#" data-id ="' . $row->id . '"><i class="fas fa-trash"></i></a>
+                                        <a class="btn btn-primary" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-eye"></i> Periksa</a>
+                                        <a class="btn btn-primary btn-post" href="#" data-id ="' . $row->id . '"><i class="fas fa-paper-plane"></i> Ajukan</a>';
+                        } else if ($row->status == 'selesai') {
+                            $actionBtn = '<a class="btn btn-primary" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-eye"></i></a>';
+                        } else if ($row->status_prov == '1') {
+                            $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>
+                             <a class="btn btn-primary" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-eye"></i> Periksa</a>';
+                        } else {
+                            $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>
+                             <a class="btn btn-primary" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-eye"></i> Periksa</a>
+                             <a class="btn btn-primary btn-post" href="#" data-id ="' . $row->id . '"><i class="fas fa-paper-plane"></i> Ajukan</a>';
+                        }
 
                         //
-                        if ($row->status_level = '02090100000000') {
-                            # code...
+                    } else if (auth()->user()->role_id == 5) {
+                        if ($row->status == 'dibuat' && $row->user_id == auth()->user()->user_id) {
                             $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>
-                                        <a class="btn btn-danger btn-delete" href="#" data-id ="' . $row->id . '"><i class="fas fa-trash"></i></a>
-                                        <a class="btn btn-info" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-edit"></i> Periksa</a>';
+                                        <a class="btn btn-danger btn-delete" href="#" data-id ="' . $row->id . '"><i class="fas fa-trash"></i></a>';
+                        } else if ($row->status == 'selesai') {
+                            $actionBtn = '<a class="btn btn-primary" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-eye"></i></a>';
                         } else {
-
                             $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>
-                                        <a class="btn btn-danger btn-delete" href="#" data-id ="' . $row->id . '"><i class="fas fa-trash"></i></a>
-                                        <a class="btn btn-info" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-edit"></i> Periksa</a>
-                                        <a class="btn btn-primary btn-post" href="#" data-id ="' . $row->id . '"><i class="fas fa-paper-plane"></i> Ajukan</a>';
+                            <a class="btn btn-primary" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-eye"></i> Periksa</a>';
                         }
+                        //
+                    } else {
+                        $actionBtn = '<a class="btn btn-success" href="' . route('permohonan.edit', $row->id) . '"><i class="fas fa-edit"></i></a>
+                                        <a class="btn btn-danger btn-delete" href="#" data-id ="' . $row->id . '"><i class="fas fa-trash"></i></a>
+                                        <a class="btn btn-primary" href="' . route('permohonan.show', $row->id) . '"><i class="fas fa-eye"></i> Periksa</a>
+                                        <a class="btn btn-primary btn-post" href="#" data-id ="' . $row->id . '"><i class="fas fa-paper-plane"></i> Ajukan</a>';
                     }
 
                     return $actionBtn . ' ' . $tlBtn;
@@ -146,8 +170,7 @@ class PermohonanController extends Controller
                 'users_id'    => auth()->user()->id,
                 'layanan_id' => $layanan->id,
                 'keterangan' => $request->keterangan,
-                'status'     => 'diajukan',
-                'status_level' => auth()->user()->KODE_SATKER_3,
+                'kode_satker' => auth()->user()->KODE_SATKER_3,
             ]);
 
             $permohonanLog = PermohonanLog::create([
@@ -466,21 +489,35 @@ class PermohonanController extends Controller
             ]);
         }
 
-        // Jika lengkap semua -> ajukan ke Kanwil
-        $permohonan->update([
-            'status' => 'diajukan',
-            'status_level' => '02090100000000',
-        ]);
+        if (auth()->user()->role_id == 2) {
+            // Jika lengkap semua -> ajukan ke kabupten
+            $permohonan->update([
+                'status' => 'diajukan',
+                'status_kab' => '1',
+            ]);
 
-        PermohonanLog::create([
-            'permohonan_id' => $permohonan->id,
-            'users_id'      => auth()->user()->id,
-            'catatan'       => 'Permohonan diteruskan ke Kanwil.'
-        ]);
+            PermohonanLog::create([
+                'permohonan_id' => $permohonan->id,
+                'users_id'      => auth()->user()->id,
+                'catatan'       => 'Permohonan diteruskan ke Kabupaten.'
+            ]);
+        } else {
+            // Jika lengkap semua -> ajukan ke Kanwil
+            $permohonan->update([
+                'status' => 'diajukan',
+                'status_prov' => '1',
+            ]);
+
+            PermohonanLog::create([
+                'permohonan_id' => $permohonan->id,
+                'users_id'      => auth()->user()->id,
+                'catatan'       => 'Permohonan diteruskan ke Kanwil.'
+            ]);
+        };
 
         return response()->json([
             'status' => 'success',
-            'message' => "Permohonan berhasil diajukan ke Kanwil",
+            'message' => "Permohonan berhasil diajukan",
         ]);
     }
 }

@@ -12,7 +12,9 @@ class Permohonan extends Model
         'users_id',
         'layanan_id',
         'status',
-        'status_level',
+        'kode_satker',
+        'status_kab',
+        'status_prov',
         'keterangan',
     ];
 

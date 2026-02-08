@@ -72,6 +72,11 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
     Route::post('permohonan/ajukan/{id}', [Backend\PermohonanController::class, 'ajukan'])->name('permohonan.ajukan');
     Route::resource('permohonan', Backend\PermohonanController::class);
 
+    /* Survey*/
+    Route::get('survey/isi/{layanan}/{kode_satker}', [Backend\SurveyController::class, 'isiSurvey'])->name('survey.isi');
+    Route::post('survey/submit-survey/{survey}', [Backend\SurveyController::class, 'submitSurvey'])->name('survey.submit');
+    Route::resource('survey', Backend\SurveyController::class);
+
     Route::get('/permohonan/{id}/timeline', function ($id) {
         $logs = \App\Models\PermohonanLog::with(['user', 'permohonan'])
             ->where('permohonan_id', $id)

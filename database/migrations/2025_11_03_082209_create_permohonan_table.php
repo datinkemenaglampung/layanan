@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('users_id')->constrained()->on('users')->onDelete('cascade');
             $table->foreignId('layanan_id')->constrained()->on('layanan')->onDelete('cascade');
             $table->enum('status', ['dibuat', 'diajukan', 'diproses', 'ditolak', 'selesai'])->default('dibuat'); // menunggu, diproses, selesai, ditolak
-            $table->enum('status_level', ['Kantor Kemenag', 'Kantor Wilayah'])->default('Kantor Kemenag');
+            $table->string('kode_satker');
+            $table->enum('status_kab', ['1', '0'])->default('0');
+            $table->enum('status_prov', ['1', '0'])->default('0');
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });

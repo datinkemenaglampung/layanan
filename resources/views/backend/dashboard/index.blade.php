@@ -37,7 +37,7 @@
     @endforeach
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-lg-12 col-md-12 col-12 col-sm-12">
         <div class="card">
             <div class="card-header">
@@ -59,9 +59,9 @@
                     <div class="col">
                         <select name="select2User" id="select2User" class="form-control select2">
                             <option value="">All</option>
-                            <!-- @if (Auth::user()->id)
+                            @if (Auth::user()->id)
                             <option value="{{Auth::user()->id}}" selected>{{Auth::user()->name}}</option>
-                            @endif -->
+                            @endif
                         </select>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 @endsection
 @section('script')
 <script src="{{ asset ('assets/modules/chart.min.js') }}"></script>
